@@ -7,8 +7,24 @@ async function chat(prompt) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ model: "tinyllama", prompt: prompt })
     });
-    const data = await response.json();
-    console.log(data.response);
+
+    // ✅ Handle the response as a stream
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let result = "";
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        result += decoder.decode(value, { stream: true });
+    }
+
+    try {
+        const jsonData = JSON.parse(result);
+        console.log("Bot:", jsonData.response);
+    } catch (error) {
+        console.error("Error parsing response:", error);
+    }
 }
 
 const rl = readline.createInterface({
@@ -17,6 +33,5 @@ const rl = readline.createInterface({
 });
 
 rl.question('Enter your prompt: ', (prompt) => {
-    chat(prompt);
-    rl.close();
+    chat(prompt).then(() => rl.close());
 });
