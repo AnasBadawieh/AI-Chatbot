@@ -1,6 +1,7 @@
 const readline = require('readline');
 
-async function chat(prompt) {
+// src/api/chatbotAPI.js
+export async function chat(prompt) {
     const fetch = (await import("node-fetch")).default;
     const response = await fetch("http://localhost:11434/api/generate", {
         method: "POST",
@@ -8,10 +9,7 @@ async function chat(prompt) {
         body: JSON.stringify({ model: "tinyllama", prompt: prompt })
     });
 
-    // ✅ Read response as text
     const text = await response.text();
-
-    // ✅ Split response into JSON objects (handle streaming)
     const jsonObjects = text.trim().split("\n").map(line => {
         try {
             return JSON.parse(line);
@@ -21,13 +19,12 @@ async function chat(prompt) {
         }
     });
 
-    // ✅ Extract the actual response text
     const fullResponse = jsonObjects
-        .filter(obj => obj && obj.response) // Remove null/invalid entries
-        .map(obj => obj.response) // Get only the response text
-        .join(""); // Join all chunks
+        .filter(obj => obj && obj.response)
+        .map(obj => obj.response)
+        .join("");
 
-    console.log("Bot:", fullResponse);
+    return fullResponse;
 }
 
 const rl = readline.createInterface({
@@ -36,5 +33,8 @@ const rl = readline.createInterface({
 });
 
 rl.question('Enter your prompt: ', (prompt) => {
-    chat(prompt).then(() => rl.close());
+    chat(prompt).then((fullResponse) => {
+        console.log("Bot:", fullResponse);
+        rl.close();
+    });
 });
