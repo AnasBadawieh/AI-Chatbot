@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import Message from './Message';
+import { chat } from '../api/chatbotAPI';
 
 function Chatbot() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
-      setMessages([...messages, { text: input, sender: 'user' }]);
+      const userMessage = { text: input, sender: 'user' };
+      setMessages([...messages, userMessage]);
       setInput('');
-      // Here you will call the AI API and add the response to messages
+
+      const botResponse = await chat(input);
+      const botMessage = { text: botResponse, sender: 'bot' };
+      setMessages(prevMessages => [...prevMessages, botMessage]);
     }
   };
 
