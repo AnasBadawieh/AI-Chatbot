@@ -7,6 +7,7 @@ function Chatbot() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [ttsEnabled, setTtsEnabled] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState('UK English Male');
   const inputRef = useRef(null);
   const sendButtonRef = useRef(null);
 
@@ -40,7 +41,7 @@ function Chatbot() {
       setMessages(prevMessages => [...prevMessages, botMessage]);
 
       if (ttsEnabled) {
-        responsiveVoice.speak(botResponse, "UK English Male");
+        responsiveVoice.speak(botResponse, selectedVoice);
       }
     }
   };
@@ -49,14 +50,28 @@ function Chatbot() {
     <div className="chat-container">
       <div className="chat-header">
         AI Chatbot
-        <label>
-          <input
-            type="checkbox"
-            checked={ttsEnabled}
-            onChange={() => setTtsEnabled(!ttsEnabled)}
-          />
-          Text-to-Speech
-        </label>
+        <div className="tts-controls">
+          <label>
+            <input
+              type="checkbox"
+              checked={ttsEnabled}
+              onChange={() => setTtsEnabled(!ttsEnabled)}
+            />
+            Text-to-Speech
+          </label>
+          {ttsEnabled && (
+            <select
+              value={selectedVoice}
+              onChange={(e) => setSelectedVoice(e.target.value)}
+            >
+              <option value="UK English Male">UK English Male</option>
+              <option value="UK English Female">UK English Female</option>
+              <option value="US English Male">US English Male</option>
+              <option value="US English Female">US English Female</option>
+              {/* Add more voice options as needed */}
+            </select>
+          )}
+        </div>
       </div>
       <div className="chat-messages">
         {messages.map((msg, index) => (
