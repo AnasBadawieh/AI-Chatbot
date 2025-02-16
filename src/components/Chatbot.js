@@ -7,6 +7,7 @@ function Chatbot() {
   const [input, setInput] = useState('');
   const [ttsEnabled, setTtsEnabled] = useState(false);
   const inputRef = useRef(null);
+  const sendButtonRef = useRef(null);
 
   useEffect(() => {
     // Highlight the text box when the website launches
@@ -15,7 +16,7 @@ function Chatbot() {
     // Add event listener for Enter key
     const handleKeyDown = (event) => {
       if (event.key === 'Enter') {
-        handleSend();
+        sendButtonRef.current.click();
       }
     };
 
@@ -69,7 +70,7 @@ function Chatbot() {
           placeholder="Type a message..."
           ref={inputRef}
         />
-        <button onClick={handleSend}>Send</button>
+        <button ref={sendButtonRef} onClick={handleSend}>Send</button>
       </div>
     </div>
   );
