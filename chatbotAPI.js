@@ -8,23 +8,26 @@ async function chat(prompt) {
         body: JSON.stringify({ model: "tinyllama", prompt: prompt })
     });
 
-    // ✅ Handle the response as a stream
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let result = "";
+    // ✅ Read response as text
+    const text = await response.text();
 
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        result += decoder.decode(value, { stream: true });
-    }
+    // ✅ Split response into JSON objects (handle streaming)
+    const jsonObjects = text.trim().split("\n").map(line => {
+        try {
+            return JSON.parse(line);
+        } catch (error) {
+            console.error("Error parsing JSON line:", line);
+            return null;
+        }
+    });
 
-    try {
-        const jsonData = JSON.parse(result);
-        console.log("Bot:", jsonData.response);
-    } catch (error) {
-        console.error("Error parsing response:", error);
-    }
+    // ✅ Extract the actual response text
+    const fullResponse = jsonObjects
+        .filter(obj => obj && obj.response) // Remove null/invalid entries
+        .map(obj => obj.response) // Get only the response text
+        .join(""); // Join all chunks
+
+    console.log("Bot:", fullResponse);
 }
 
 const rl = readline.createInterface({
