@@ -5,6 +5,7 @@ import { chat } from '../api/chatbotAPI';
 function Chatbot() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [ttsEnabled, setTtsEnabled] = useState(false);
 
   const handleSend = async () => {
     if (input.trim()) {
@@ -15,12 +16,27 @@ function Chatbot() {
       const botResponse = await chat(input);
       const botMessage = { text: botResponse, sender: 'bot' };
       setMessages(prevMessages => [...prevMessages, botMessage]);
+
+      if (ttsEnabled) {
+        const utterance = new SpeechSynthesisUtterance(botResponse);
+        speechSynthesis.speak(utterance);
+      }
     }
   };
 
   return (
     <div>
-      <div className="chat-header">AI Chatbot</div>
+      <div className="chat-header">
+        AI Chatbot
+        <label>
+          <input
+            type="checkbox"
+            checked={ttsEnabled}
+            onChange={() => setTtsEnabled(!ttsEnabled)}
+          />
+          Text-to-Speech
+        </label>
+      </div>
       <div className="chat-messages">
         {messages.map((msg, index) => (
           <Message key={index} text={msg.text} sender={msg.sender} />
