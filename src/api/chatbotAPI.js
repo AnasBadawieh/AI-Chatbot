@@ -1,8 +1,5 @@
-const readline = require('readline');
-
 // src/api/chatbotAPI.js
 export async function chat(prompt) {
-    const fetch = (await import("node-fetch")).default;
     const response = await fetch("http://localhost:11434/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -26,15 +23,3 @@ export async function chat(prompt) {
 
     return fullResponse;
 }
-
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-rl.question('Enter your prompt: ', (prompt) => {
-    chat(prompt).then((fullResponse) => {
-        console.log("Bot:", fullResponse);
-        rl.close();
-    });
-});
