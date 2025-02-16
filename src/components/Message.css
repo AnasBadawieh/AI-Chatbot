@@ -1,0 +1,19 @@
+.message {
+  max-width: 60%;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  word-wrap: break-word;
+}
+
+.message.user {
+  background-color: lightgreen;
+  align-self: flex-end;
+  text-align: right;
+}
+
+.message.bot {
+  background-color: lightgrey;
+  align-self: flex-start;
+  text-align: left;
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Message from './Message';
 import { chat } from '../api/chatbotAPI';
+import './Chatbot.css';
 
 function Chatbot() {
   const [messages, setMessages] = useState([]);
@@ -45,7 +46,7 @@ function Chatbot() {
   };
 
   return (
-    <div>
+    <div className="chat-container">
       <div className="chat-header">
         AI Chatbot
         <label>
