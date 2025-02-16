@@ -18,8 +18,7 @@ function Chatbot() {
       setMessages(prevMessages => [...prevMessages, botMessage]);
 
       if (ttsEnabled) {
-        const utterance = new SpeechSynthesisUtterance(botResponse);
-        speechSynthesis.speak(utterance);
+        responsiveVoice.speak(botResponse, "UK English Male");
       }
     }
   };
