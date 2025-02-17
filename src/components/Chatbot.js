@@ -9,6 +9,7 @@ function Chatbot() {
   const [ttsEnabled, setTtsEnabled] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState('UK English Male');
   const [loading, setLoading] = useState(false);
+  const [currentMessage, setCurrentMessage] = useState('');
   const inputRef = useRef(null);
   const sendButtonRef = useRef(null);
 
@@ -41,13 +42,29 @@ function Chatbot() {
       const botResponse = await chat(input);
       setLoading(false);
 
-      const botMessage = { text: botResponse, sender: 'bot' };
-      setMessages(prevMessages => [...prevMessages, botMessage]);
+      revealMessage(botResponse);
 
       if (ttsEnabled) {
         responsiveVoice.speak(botResponse, selectedVoice);
       }
     }
+  };
+
+  const revealMessage = (message) => {
+    let index = 0;
+    setCurrentMessage('');
+
+    const interval = setInterval(() => {
+      setCurrentMessage((prev) => prev + message[index]);
+      index++;
+
+      if (index === message.length) {
+        clearInterval(interval);
+        const botMessage = { text: message, sender: 'bot' };
+        setMessages((prevMessages) => [...prevMessages, botMessage]);
+        setCurrentMessage('');
+      }
+    }, 50); // Adjust the speed as needed (3ms per letter might be too fast)
   };
 
   return (
@@ -84,6 +101,11 @@ function Chatbot() {
         {loading && (
           <div className="message bot">
             <div className="loading-spinner"></div>
+          </div>
+        )}
+        {currentMessage && (
+          <div className="message bot">
+            {currentMessage}
           </div>
         )}
       </div>
