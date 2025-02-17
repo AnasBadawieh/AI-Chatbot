@@ -8,6 +8,7 @@ function Chatbot() {
   const [input, setInput] = useState('');
   const [ttsEnabled, setTtsEnabled] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState('UK English Male');
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
   const sendButtonRef = useRef(null);
 
@@ -36,7 +37,10 @@ function Chatbot() {
       setMessages([...messages, userMessage]);
       setInput('');
 
+      setLoading(true);
       const botResponse = await chat(input);
+      setLoading(false);
+
       const botMessage = { text: botResponse, sender: 'bot' };
       setMessages(prevMessages => [...prevMessages, botMessage]);
 
@@ -77,6 +81,11 @@ function Chatbot() {
         {messages.map((msg, index) => (
           <Message key={index} text={msg.text} sender={msg.sender} />
         ))}
+        {loading && (
+          <div className="message bot">
+            <div className="loading-spinner"></div>
+          </div>
+        )}
       </div>
       <div className="chat-input">
         <input
