@@ -10,8 +10,10 @@ function Chatbot() {
   const [selectedVoice, setSelectedVoice] = useState('UK English Male');
   const [loading, setLoading] = useState(false);
   const [currentMessage, setCurrentMessage] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
   const inputRef = useRef(null);
   const sendButtonRef = useRef(null);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     // Highlight the text box when the website launches
@@ -39,6 +41,7 @@ function Chatbot() {
       setInput('');
 
       setLoading(true);
+      setIsGenerating(true);
       const botResponse = await chat(input);
       setLoading(false);
 
@@ -54,15 +57,16 @@ function Chatbot() {
     let index = 0;
     setCurrentMessage('');
 
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       setCurrentMessage((prev) => prev + message[index]);
       index++;
 
       if (index === message.length) {
-        clearInterval(interval);
+        clearInterval(intervalRef.current);
         const botMessage = { text: message, sender: 'bot' };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
         setCurrentMessage('');
+        setIsGenerating(false);
       }
     }, 50); // Adjust the speed as needed (3ms per letter might be too fast)
   };
@@ -72,6 +76,14 @@ function Chatbot() {
     if (ttsEnabled) {
       responsiveVoice.cancel();
     }
+  };
+
+  const handleCancel = () => {
+    clearInterval(intervalRef.current);
+    setLoading(false);
+    setIsGenerating(false);
+    setCurrentMessage('');
+    responsiveVoice.cancel();
   };
 
   return (
@@ -124,7 +136,11 @@ function Chatbot() {
           placeholder="Type a message..."
           ref={inputRef}
         />
-        <button ref={sendButtonRef} onClick={handleSend}>Send</button>
+        {isGenerating ? (
+          <button onClick={handleCancel}>Pause</button>
+        ) : (
+          <button ref={sendButtonRef} onClick={handleSend}>Send</button>
+        )}
       </div>
     </div>
   );
