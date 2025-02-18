@@ -67,6 +67,13 @@ function Chatbot() {
     }, 50); // Adjust the speed as needed (3ms per letter might be too fast)
   };
 
+  const handleTtsToggle = () => {
+    setTtsEnabled(!ttsEnabled);
+    if (ttsEnabled) {
+      responsiveVoice.cancel();
+    }
+  };
+
   return (
     <div className="chat-container">
       <div className="chat-header">
@@ -76,7 +83,7 @@ function Chatbot() {
             <input
               type="checkbox"
               checked={ttsEnabled}
-              onChange={() => setTtsEnabled(!ttsEnabled)}
+              onChange={handleTtsToggle}
             />
             Text-to-Speech
           </label>
