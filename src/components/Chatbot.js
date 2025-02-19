@@ -42,11 +42,14 @@ const Chatbot = () => {
     let botResponse = '';
     await chat(input, (partialResponse) => {
       botResponse = partialResponse;
-      setMessages((prevMessages) => [
-        ...prevMessages.filter((msg) => msg.sender !== 'bot'),
-        userMessage,
-        { text: botResponse, sender: 'bot' }
-      ]);
+      setMessages((prevMessages) => {
+        // Remove the last bot message if it exists
+        const filteredMessages = prevMessages.filter((msg) => msg.sender !== 'bot');
+        return [
+          ...filteredMessages,
+          { text: botResponse, sender: 'bot' }
+        ];
+      });
     });
 
     setLoading(false);
