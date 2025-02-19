@@ -90,12 +90,12 @@ const Chatbot = () => {
         {messages.map((msg, index) => (
           <Message key={index} text={msg.text} sender={msg.sender} />
         ))}
-        {loading && (
-          <div className="message bot">
-            <div className="loading-spinner"></div>
-          </div>
-        )}
       </div>
+      {loading && (
+        <div className="message bot">
+          <div className="loading-spinner"></div>
+        </div>
+      )}
       <div className="chat-input">
         <input
           type="text"
