@@ -1,25 +1,25 @@
 // src/api/chatbotAPI.js
-export async function chat(prompt) {
+export async function chat(prompt, onUpdate) {
     const response = await fetch("http://localhost:11434/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: "mistral", prompt: prompt })
+        body: JSON.stringify({ model: "mistral", prompt: prompt, stream: true })
     });
 
-    const text = await response.text();
-    const jsonObjects = text.trim().split("\n").map(line => {
-        try {
-            return JSON.parse(line);
-        } catch (error) {
-            console.error("Error parsing JSON line:", line);
-            return null;
-        }
-    });
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let fullResponse = "";
 
-    const fullResponse = jsonObjects
-        .filter(obj => obj && obj.response)
-        .map(obj => obj.response)
-        .join("");
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        fullResponse += chunk;
+
+        // Call the onUpdate callback with the current response
+        if (onUpdate) onUpdate(fullResponse);
+    }
 
     return fullResponse;
 }
