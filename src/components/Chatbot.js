@@ -43,12 +43,20 @@ const Chatbot = () => {
     await chat(input, (partialResponse) => {
       botResponse = partialResponse;
       setMessages((prevMessages) => {
-        // Remove the last bot message if it exists
-        const filteredMessages = prevMessages.filter((msg) => msg.sender !== 'bot');
-        return [
-          ...filteredMessages,
-          { text: botResponse, sender: 'bot' }
-        ];
+        const lastMessage = prevMessages[prevMessages.length - 1];
+        if (lastMessage && lastMessage.sender === 'bot') {
+          // Update the last bot message with the new partial response
+          return [
+            ...prevMessages.slice(0, -1),
+            { text: botResponse, sender: 'bot' }
+          ];
+        } else {
+          // Add a new bot message
+          return [
+            ...prevMessages,
+            { text: botResponse, sender: 'bot' }
+          ];
+        }
       });
     });
 
