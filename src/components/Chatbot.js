@@ -3,7 +3,7 @@ import Message from './Message';
 import { chat } from '../api/chatbotAPI';
 import './Chatbot.css';
 
-function Chatbot() {
+const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [ttsEnabled, setTtsEnabled] = useState(false);
@@ -34,22 +34,39 @@ function Chatbot() {
     };
   }, []);
 
-  const handleSend = async () => {
-    if (input.trim()) {
-      const userMessage = { text: input, sender: 'user' };
-      setMessages([...messages, userMessage]);
-      setInput('');
+  const handleSendMessage = async () => {
+    if (!input.trim()) return;
 
-      setLoading(true);
-      setIsGenerating(true);
-      const botResponse = await chat(input);
-      setLoading(false);
+    const userMessage = { text: input, sender: 'user' };
+    setMessages([...messages, userMessage]);
+    setInput('');
+    setLoading(true);
 
-      revealMessage(botResponse);
+    let botResponse = '';
+    await chat(input, (partialResponse) => {
+      botResponse = partialResponse;
+      setMessages((prevMessages) => {
+        const lastMessage = prevMessages[prevMessages.length - 1];
+        if (lastMessage && lastMessage.sender === 'bot') {
+          // Update the last bot message with the new partial response
+          return [
+            ...prevMessages.slice(0, -1),
+            { text: botResponse, sender: 'bot' }
+          ];
+        } else {
+          // Add a new bot message
+          return [
+            ...prevMessages,
+            { text: botResponse, sender: 'bot' }
+          ];
+        }
+      });
+    });
 
-      if (ttsEnabled) {
-        responsiveVoice.speak(botResponse, selectedVoice);
-      }
+    setLoading(false);
+
+    if (ttsEnabled) {
+      responsiveVoice.speak(botResponse, selectedVoice);
     }
   };
 
@@ -117,17 +134,12 @@ function Chatbot() {
         {messages.map((msg, index) => (
           <Message key={index} text={msg.text} sender={msg.sender} />
         ))}
-        {loading && (
-          <div className="message bot">
-            <div className="loading-spinner"></div>
-          </div>
-        )}
-        {currentMessage && (
-          <div className="message bot">
-            {currentMessage}
-          </div>
-        )}
       </div>
+      {loading && (
+        <div className="message bot">
+          <div className="loading-spinner"></div>
+        </div>
+      )}
       <div className="chat-input">
         <input
           type="text"
@@ -135,15 +147,13 @@ function Chatbot() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type a message..."
           ref={inputRef}
+          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+          disabled={loading}
         />
-        {isGenerating ? (
-          <button onClick={handleCancel}>Pause</button>
-        ) : (
-          <button ref={sendButtonRef} onClick={handleSend}>Send</button>
-        )}
+        <button ref={sendButtonRef} onClick={handleSendMessage} disabled={loading}>Send</button>
       </div>
     </div>
   );
-}
+};
 
 export default Chatbot;
