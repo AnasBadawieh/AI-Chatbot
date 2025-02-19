@@ -14,6 +14,7 @@ const Chatbot = () => {
   const inputRef = useRef(null);
   const sendButtonRef = useRef(null);
   const intervalRef = useRef(null);
+  const chatEndRef = useRef(null);
 
   useEffect(() => {
     // Highlight the text box when the website launches
@@ -33,6 +34,11 @@ const Chatbot = () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  useEffect(() => {
+    // Scroll to the bottom of the chat container whenever messages change
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const handleSendMessage = async () => {
     if (!input.trim()) return;
@@ -134,6 +140,7 @@ const Chatbot = () => {
         {messages.map((msg, index) => (
           <Message key={index} text={msg.text} sender={msg.sender} />
         ))}
+        <div ref={chatEndRef} />
       </div>
       {loading && (
         <div className="message bot">
