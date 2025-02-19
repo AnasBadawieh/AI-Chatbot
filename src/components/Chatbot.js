@@ -42,7 +42,11 @@ const Chatbot = () => {
     let botResponse = '';
     await chat(input, (partialResponse) => {
       botResponse = partialResponse;
-      setMessages([...messages, userMessage, { text: botResponse, sender: 'bot' }]);
+      setMessages((prevMessages) => [
+        ...prevMessages.filter((msg) => msg.sender !== 'bot'),
+        userMessage,
+        { text: botResponse, sender: 'bot' }
+      ]);
     });
 
     setLoading(false);

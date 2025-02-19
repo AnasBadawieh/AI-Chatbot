@@ -15,10 +15,15 @@ export async function chat(prompt, onUpdate) {
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        fullResponse += chunk;
+        const jsonChunks = chunk.split('\n').filter(Boolean);
 
-        // Call the onUpdate callback with the current response
-        if (onUpdate) onUpdate(fullResponse);
+        for (const jsonChunk of jsonChunks) {
+            const parsedChunk = JSON.parse(jsonChunk);
+            fullResponse += parsedChunk.response;
+
+            // Call the onUpdate callback with the current response
+            if (onUpdate) onUpdate(fullResponse);
+        }
     }
 
     return fullResponse;
