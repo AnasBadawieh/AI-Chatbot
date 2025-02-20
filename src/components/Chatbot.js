@@ -47,6 +47,7 @@ const Chatbot = () => {
     setMessages([...messages, userMessage]);
     setInput('');
     setLoading(true);
+    setIsGenerating(true);
 
     let botResponse = '';
     await chat(input, (partialResponse) => {
@@ -70,6 +71,7 @@ const Chatbot = () => {
     });
 
     setLoading(false);
+    setIsGenerating(false);
 
     if (ttsEnabled) {
       responsiveVoice.speak(botResponse, selectedVoice);
@@ -157,7 +159,13 @@ const Chatbot = () => {
           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
           disabled={loading}
         />
-        <button ref={sendButtonRef} onClick={handleSendMessage} disabled={loading}>Send</button>
+        <button
+          ref={sendButtonRef}
+          onClick={isGenerating ? handleCancel : handleSendMessage}
+          disabled={loading}
+        >
+          {isGenerating ? 'Stop' : 'Send'}
+        </button>
       </div>
     </div>
   );
