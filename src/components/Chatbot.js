@@ -15,6 +15,7 @@ const Chatbot = () => {
   const sendButtonRef = useRef(null);
   const intervalRef = useRef(null);
   const chatEndRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
   useEffect(() => {
     // Highlight the text box when the website launches
@@ -49,32 +50,36 @@ const Chatbot = () => {
     setLoading(true);
     setIsGenerating(true);
 
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     let botResponse = '';
-    await chat(input, (partialResponse) => {
-      botResponse = partialResponse;
-      setMessages((prevMessages) => {
-        const lastMessage = prevMessages[prevMessages.length - 1];
-        if (lastMessage && lastMessage.sender === 'bot') {
-          // Update the last bot message with the new partial response
-          return [
-            ...prevMessages.slice(0, -1),
-            { text: botResponse, sender: 'bot' }
-          ];
-        } else {
-          // Add a new bot message
-          return [
-            ...prevMessages,
-            { text: botResponse, sender: 'bot' }
-          ];
-        }
-      });
-    });
 
-    setLoading(false);
-    setIsGenerating(false);
-
-    if (ttsEnabled) {
-      responsiveVoice.speak(botResponse, selectedVoice);
+    try {
+      await chat(input, (partialResponse) => {
+        botResponse = partialResponse;
+        setMessages((prevMessages) => {
+          const lastMessage = prevMessages[prevMessages.length - 1];
+          if (lastMessage?.sender === 'bot') {
+              return [
+                  ...prevMessages.slice(0, -1),
+                  { text: botResponse, sender: 'bot' }
+              ];
+          }
+          return [...prevMessages, { text: botResponse, sender: 'bot' }];
+        });
+      }, controller.signal);
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        console.error("Chat Error: ", error);
+      }
+    } finally {
+      setLoading(false);
+      setIsGenerating(false);
+      abortControllerRef.current = null;
+      if (ttsEnabled && botResponse) {
+        responsiveVoice.speak(botResponse, selectedVoice, { rate: 0.9 });
+      }
     }
   };
 
@@ -104,10 +109,11 @@ const Chatbot = () => {
   };
 
   const handleCancel = () => {
-    clearInterval(intervalRef.current);
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
     setLoading(false);
     setIsGenerating(false);
-    setCurrentMessage('');
     responsiveVoice.cancel();
   };
 
@@ -162,7 +168,6 @@ const Chatbot = () => {
         <button
           ref={sendButtonRef}
           onClick={isGenerating ? handleCancel : handleSendMessage}
-          disabled={loading}
         >
           {isGenerating ? 'Stop' : 'Send'}
         </button>
