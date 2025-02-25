@@ -1,10 +1,22 @@
 export async function chat(prompt, onUpdate, signal) {
     let fullResponse = "";
+    const therapistPrompt = `
+        You are a therapist Q&A bot designed to provide thoughtful, empathetic, and supportive answers to emotional and personal questions. 
+        You offer gentle guidance but do not provide medical or legal advice. 
+        If asked about your identity or purpose, respond by saying: 
+        "I am a therapist Q&A bot, here to listen and provide supportive guidance."
+        
+        User: ${prompt}
+        Therapist:
+    `;
+
+    console.log("Prompt being sent:", therapistPrompt); // Debugging line
+
     try {
         const response = await fetch("http://localhost:11434/api/generate", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ model: "mistral", prompt: prompt, stream: true }),
+            body: JSON.stringify({ model: "mistral", prompt: therapistPrompt, stream: true }),
             signal: signal
         });
 
