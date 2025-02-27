@@ -11,6 +11,8 @@ const Chatbot = () => {
   const [loading, setLoading] = useState(false);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState('active');
   const inputRef = useRef(null);
   const sendButtonRef = useRef(null);
   const intervalRef = useRef(null);
@@ -49,6 +51,7 @@ const Chatbot = () => {
     setInput('');
     setLoading(true);
     setIsGenerating(true);
+    setIsTyping(true);
 
     const controller = new AbortController();
     abortControllerRef.current = controller;
@@ -76,6 +79,7 @@ const Chatbot = () => {
     } finally {
       setLoading(false);
       setIsGenerating(false);
+      setIsTyping(false);
       abortControllerRef.current = null;
       if (ttsEnabled && botResponse) {
         responsiveVoice.speak(botResponse, selectedVoice, { rate: 0.9 });
@@ -155,6 +159,13 @@ const Chatbot = () => {
           <div className="loading-spinner"></div>
         </div>
       )}
+      {isTyping && (
+        <div className="typing-indicator">
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </div>
+      )}
       <div className="chat-input">
         <input
           type="text"
@@ -172,6 +183,7 @@ const Chatbot = () => {
           {isGenerating ? 'Stop' : 'Send'}
         </button>
       </div>
+      <div className={`connection-status ${connectionStatus}`}>{connectionStatus === 'active' ? 'Connected' : 'Disconnected'}</div>
     </div>
   );
 };
