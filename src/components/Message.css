@@ -7,13 +7,16 @@
 }
 
 .message.user {
-  background-color: lightgreen;
-  align-self: flex-end;
-  text-align: right;
+  background: #2a4a6e;
+  color: #e6f1ff;
+  border-bottom-right-radius: 3px;
+  margin-left: auto;
+  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .message.bot {
-  background-color: lightgrey;
-  align-self: flex-start;
-  text-align: left;
+  background: linear-gradient(145deg, rgba(17, 34, 64, 0.9), rgba(17, 34, 64, 0.7));
+  border: 1px solid #64ffda;
+  margin-right: auto;
+  box-shadow: 0 0 12px rgba(100, 255, 218, 0.2), 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
