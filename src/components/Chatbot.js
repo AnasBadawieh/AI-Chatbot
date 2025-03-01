@@ -122,7 +122,7 @@ const Chatbot = () => {
   };
 
   return (
-    <div className="chat-container">
+    <div className="chat">
       <div className="chat-header">
         AI Chatbot
         <div className="tts-controls">
