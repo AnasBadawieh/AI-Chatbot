@@ -176,6 +176,9 @@ body {
 }
 
 @media (max-width: 768px) {
+    .chat-container {
+        width: 90%;
+    }
     .input-area {
         width: 80%;
     }
