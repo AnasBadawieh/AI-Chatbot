@@ -123,8 +123,11 @@ const Chatbot = () => {
 
   return (
     <div className="chat">
-      <div className="chat-header">
-        AI Chatbot
+      <div className={`chat-header ${connectionStatus}`}>
+        <div className="header-content">
+          <span className="chat-title">AI Chatbot</span>
+          <div className="header-effects"></div>
+        </div>
         <div className="tts-controls">
           <label
             className={`tts-switch ${ttsEnabled ? 'active' : ''}`}
@@ -191,7 +194,6 @@ const Chatbot = () => {
           )}
         </button>
       </div>
-      <div className={`connection-status ${connectionStatus}`}>{connectionStatus === 'active' ? 'Connected' : 'Disconnected'}</div>
     </div>
   );
 };
