@@ -204,5 +204,49 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-size: 0.9rem; /* Smaller text for controls */
+  font-size: 0.9rem;
+}
+
+.tts-switch {
+  color: #ff4d4d;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(100, 255, 218, 0.3);
+}
+
+.tts-switch.active {
+  color: #64ffda;
+  text-shadow: 0 0 8px rgba(100, 255, 218, 0.4);
+  box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+}
+
+.tts-switch:not(.active) {
+  color: #ff4d4d;
+  text-shadow: 0 0 8px rgba(255, 77, 77, 0.4);
+  box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+}
+
+.tts-switch::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tts-switch.active::after {
+  background: radial-gradient(circle at center, rgba(100, 255, 218, 0.2) 0%, transparent 70%);
+  opacity: 1;
+}
+
+.tts-switch:not(.active)::after {
+  background: radial-gradient(circle at center, rgba(255, 77, 77, 0.2) 0%, transparent 70%);
+  opacity: 1;
 }

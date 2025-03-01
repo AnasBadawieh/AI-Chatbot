@@ -126,12 +126,10 @@ const Chatbot = () => {
       <div className="chat-header">
         AI Chatbot
         <div className="tts-controls">
-          <label>
-            <input
-              type="checkbox"
-              checked={ttsEnabled}
-              onChange={handleTtsToggle}
-            />
+          <label
+            className={`tts-switch ${ttsEnabled ? 'active' : ''}`}
+            onClick={handleTtsToggle}
+          >
             Text-to-Speech
           </label>
           {ttsEnabled && (
