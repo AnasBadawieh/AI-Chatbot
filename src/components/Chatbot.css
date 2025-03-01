@@ -215,18 +215,21 @@ body {
   transition: all 0.3s ease;
   position: relative;
   border: 1px solid rgba(100, 255, 218, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tts-switch.active {
   color: #64ffda;
   text-shadow: 0 0 8px rgba(100, 255, 218, 0.4);
   box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+  transform: scale(1);
 }
 
 .tts-switch:not(.active) {
   color: #ff4d4d;
   text-shadow: 0 0 8px rgba(255, 77, 77, 0.4);
   box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+  transform: scale(1);
 }
 
 .tts-switch::after {
@@ -249,4 +252,23 @@ body {
 .tts-switch:not(.active)::after {
   background: radial-gradient(circle at center, rgba(255, 77, 77, 0.2) 0%, transparent 70%);
   opacity: 1;
+}
+
+/* Hover effects for active state */
+.tts-switch.active:hover {
+  box-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+  transform: scale(1.05);
+  background: rgba(100, 255, 218, 0.1);
+}
+
+/* Hover effects for inactive state */
+.tts-switch:not(.active):hover {
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.5);
+  transform: scale(1.05);
+  background: rgba(255, 77, 77, 0.1);
+}
+
+/* Enhance the radial glow on hover */
+.tts-switch:hover::after {
+  opacity: 0.8;
 }
