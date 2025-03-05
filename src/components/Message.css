@@ -20,7 +20,6 @@
   max-width: 60%; /* Ensure the bubble is flexible */
   word-wrap: break-word; /* Break long words */
   margin-bottom: 10px; /* Add space between messages */
-  max-height: fit-content; /* Allow bubble to grow with content */
 }
 
 /*
