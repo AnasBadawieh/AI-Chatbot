@@ -88,6 +88,7 @@ const Chatbot = () => {
       if (ttsEnabled && botResponse) {
         responsiveVoice.speak(botResponse, selectedVoice, { rate: 0.9 });
       }
+      inputRef.current.focus();
     }
   };
 

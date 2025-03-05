@@ -7,6 +7,8 @@
   scrollbar-color: #64ffda rgba(17, 34, 64, 0.5);
   position: relative;
   height: 60dvh;
+  display: flex;
+  flex-direction: column; /* Ensure messages stack vertically */
 }
 
 .message {
@@ -17,13 +19,15 @@
   transform-origin: bottom;
   animation: messageAppear 0.3s ease-out;
   min-height: 45px; /* Prevent bubbles from being too small */
-  display: flex;
+  display: inline-flex; /* Ensure bubble size adjusts to content */
   align-items: center;
   padding: 0.8rem 1.2rem; /* Reduce vertical padding */
   word-break: break-word;
   line-height: 1.4;
   transition: all 0.2s ease;
 }
+
+
 
 @keyframes messageAppear {
   from {
@@ -35,38 +39,6 @@
       transform: translateY(0);
   }
 }
-
-.message.user {
-  background: #2a4a6e;
-  color: #e6f1ff;
-  border-bottom-right-radius: 3px;
-  margin-left: auto;
-  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.message.ai {
-  background: linear-gradient(145deg, rgba(17, 34, 64, 0.9), rgba(17, 34, 64, 0.7));
-  border: 1px solid #64ffda;
-  margin-right: auto;
-  box-shadow: 
-      0 0 12px rgba(100, 255, 218, 0.2),
-      2px 2px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
-  padding-left: 2rem; /* Add consistent left padding */
-}
-
-.message.ai::before {
-  content: '';
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  background: #64ffda;
-  border-radius: 50%;
-}
-
 
 .typing-indicator {
     display: flex;

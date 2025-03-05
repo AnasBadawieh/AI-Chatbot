@@ -4,6 +4,32 @@
   border-bottom-right-radius: 3px;
   margin-left: auto;
   box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.2);
+  max-width: 60%; /* Ensure the bubble is flexible */
+  word-wrap: break-word; /* Break long words */
+  margin-bottom: 10px; /* Add space between messages */
+}
+
+.message.bot {
+  background: linear-gradient(145deg, rgba(17, 34, 64, 0.9), rgba(17, 34, 64, 0.7));
+  border: 1px solid #64ffda;
+  margin-right: auto;
+  box-shadow: 
+      0 0 12px rgba(100, 255, 218, 0.2),
+      2px 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  max-width: 60%; /* Ensure the bubble is flexible */
+  word-wrap: break-word; /* Break long words */
+  margin-bottom: 10px; /* Add space between messages */
+  max-height: fit-content; /* Allow bubble to grow with content */
+}
+
+/*
+.message.user {
+  background: #2a4a6e;
+  color: #e6f1ff;
+  border-bottom-right-radius: 3px;
+  margin-left: auto;
+  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .message.bot {
@@ -11,4 +37,4 @@
   border: 1px solid #64ffda;
   margin-right: auto;
   box-shadow: 0 0 12px rgba(100, 255, 218, 0.2), 2px 2px 8px rgba(0, 0, 0, 0.2);
-}
+} */
