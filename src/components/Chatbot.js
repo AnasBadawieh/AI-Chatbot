@@ -138,7 +138,7 @@ const Chatbot = () => {
             className={`tts-switch ${ttsEnabled ? 'active' : ''}`}
             onClick={handleTtsToggle}
           >
-            Text-to-Speech
+            Voice
           </label>
           {ttsEnabled && (
             <select
@@ -160,11 +160,6 @@ const Chatbot = () => {
         ))}
         <div ref={chatEndRef} />
       </div>
-      {loading && (
-        <div className="message bot">
-          <div className="loading-spinner"></div>
-        </div>
-      )}
       {isTyping && (
         <div className="typing-indicator">
           <div className="dot"></div>
