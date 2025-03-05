@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Message from './Message';
 import { chat } from '../api/chatbotAPI';
-import './Chatbot.css';
+import './ChatStyle/Chatbot.css';
+import './ChatStyle/ChatMessages.css';
+import './ChatStyle/ChatInput.css';
+import './ChatStyle/ChatHeader.css';
+import './ChatStyle/ChatTTS.css';
+import './ChatStyle/ChatContainer.css';
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
